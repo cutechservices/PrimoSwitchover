@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-08-31 Mon 11:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Primo Implementation - Main Task List</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="etb" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/bigblow/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/bigblow/css/bigblow.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/bigblow/css/hideshow.css"/>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery-ui-1.10.2.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery.localscroll-min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery.zclip.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/bigblow.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/hideshow.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Primo Implementation - Main Task List</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org61ba64e">Library Team Tasks</a>
+<ul>
+<li><a href="#org2bf2097">Acquisitions - Vendor Information</a>
+<ul>
+<li><a href="#org7df756f"><span class="todo TODO">TODO</span> Validate all vendor contact/payment information</a></li>
+<li><a href="#orgfc34825"><span class="todo TODO">TODO</span> Review Chamberlain University Library contact/payment information with all vendors</a></li>
+</ul>
+</li>
+<li><a href="#orgbc231d9">Aquisitons - Invoicing and Purchase Orders</a>
+<ul>
+<li><a href="#org1a77b95"><span class="todo TODO">TODO</span> Collect and organize copies of all vendor invoices from July 2019 to present</a></li>
+<li><a href="#org4800aa9"><span class="todo TODO">TODO</span> Collect and organize copies of all library purchase orders from July 2019 to present</a></li>
+</ul>
+</li>
+<li><a href="#org15e9815">Aquisitions - Usage Reports</a>
+<ul>
+<li><a href="#org935169d"><span class="todo TODO">TODO</span> Create reference sheet identifying which system each vendor uses to report usage (Counter4/Counter5/Vendor-Specific, etc.)</a></li>
+<li><a href="#orgbc4a44e"><span class="todo TODO">TODO</span> Obtain and store all usage reports</a></li>
+</ul>
+</li>
+<li><a href="#orgba6cb0a">Digital/E-Resources</a>
+<ul>
+<li><a href="#org9687025"><span class="todo TODO">TODO</span> Create reference workbook for each subscription package, including:</a></li>
+<li><a href="#orgbb117e2"><span class="todo TODO">TODO</span> Create reference workbook for each Open Access package, including:</a></li>
+<li><a href="#org9c18b72"><span class="todo TODO">TODO</span> Create reference sheet identifying "High Priority" resources, such as:</a></li>
+<li><a href="#orge11186b"><span class="todo TODO">TODO</span> Create reference sheet identiying "Low Priority" resources, such as:</a></li>
+<li><a href="#org44fb329"><span class="todo TODO">TODO</span> Weeding Project for Ebsco Perpetual Titles</a></li>
+</ul>
+</li>
+<li><a href="#org88804f4">Fulfillment</a>
+<ul>
+<li><a href="#org06ff6bf"><span class="done DONE">DONE</span> None, as we do not have phyiscal collections</a></li>
+</ul>
+</li>
+<li><a href="#org24015cc">Interlibrary Loan</a>
+<ul>
+<li><a href="#org12b7360"><span class="todo TODO">TODO</span> Task list and extent of integration not currently clear, follow up after 9/30 meeting</a></li>
+</ul>
+</li>
+<li><a href="#orga7727b6">Discovery</a>
+<ul>
+<li><a href="#org15ca89b"><span class="todo TODO">TODO</span> Review Metadata Definitions (after 9/30 meeting)</a></li>
+<li><a href="#org5c8ba37"><span class="todo TODO">TODO</span> Determine "tuning" parameters for discovery interface</a></li>
+<li><a href="#org640e86b"><span class="todo TODO">TODO</span> Conform discovery interface to Chamberlain Branding</a></li>
+<li><a href="#org7bdbb7a"><span class="todo TODO">TODO</span> Develop UX/UI huidelines for discovery interface and apply</a></li>
+<li><a href="#org2ddc740"><span class="todo TODO">TODO</span> Develop accessibility guidelines for discovery interface and apply</a></li>
+<li><a href="#orgb2a5727"><span class="todo TODO">TODO</span> Identify packages/resources that do not work effectively in the discovery interface</a></li>
+<li><a href="#org4188372"><span class="todo TODO">TODO</span> Develop plan to mitigate discovery gaps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org5a8c626">Chamberlain IT Tasks</a>
+<ul>
+<li><a href="#orge94a2a8">Basic Infrastructure</a>
+<ul>
+<li><a href="#org190992b"><span class="todo TODO">TODO</span> Create SFTP Server for file transfers</a></li>
+</ul>
+</li>
+<li><a href="#orga126d35">User Management Integrations (Mandatory)</a>
+<ul>
+<li><a href="#orgf1822b7"><span class="todo TODO">TODO</span> Implement Connection with Student Information System</a></li>
+<li><a href="#org6220ea8"><span class="todo TODO">TODO</span> Implement connection with Authentication/SSO System (Current: Okta; Future: Azure)</a></li>
+</ul>
+</li>
+<li><a href="#orgea22003">Acquisitions Integrations (If Possible)</a>
+<ul>
+<li><a href="#org2f49c7d"><span class="todo TODO">TODO</span> Implement payment workflow to automate invoice movement and payment confirmations between Alma and AP Advantage</a></li>
+<li><a href="#org8ce10d3"><span class="todo TODO">TODO</span> Implement Purchase Order workflow between Alma and Lawson</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org61ba64e" class="outline-2">
+<h2 id="org61ba64e">Library Team Tasks</h2>
+<div class="outline-text-2" id="text-org61ba64e">
+</div>
+<div id="outline-container-org2bf2097" class="outline-3">
+<h3 id="org2bf2097">Acquisitions - Vendor Information</h3>
+<div class="outline-text-3" id="text-org2bf2097">
+</div>
+<div id="outline-container-org7df756f" class="outline-4">
+<h4 id="org7df756f"><span class="todo TODO">TODO</span> Validate all vendor contact/payment information</h4>
+<div class="outline-text-4" id="text-org7df756f">
+<ul class="org-ul">
+<li>Vendor Rep (including email and phone)</li>
+<li>Account Number/Identifier</li>
+<li>Billing address</li>
+<li>Account Support Contact (if different from rep)</li>
+<li>Technical Support Contact (if different from rep)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfc34825" class="outline-4">
+<h4 id="orgfc34825"><span class="todo TODO">TODO</span> Review Chamberlain University Library contact/payment information with all vendors</h4>
+<div class="outline-text-4" id="text-orgfc34825">
+<ul class="org-ul">
+<li>Confirm that Rachel Hanses (or Eric Bemiller) is listed as the CU Library Contact Person</li>
+<li>Remove all references to "DeVry Group," "Chamberlain College of Nursing," and "DVG"; replace with Chamberlain University or Adtalem as appropriate</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbc231d9" class="outline-3">
+<h3 id="orgbc231d9">Aquisitons - Invoicing and Purchase Orders</h3>
+<div class="outline-text-3" id="text-orgbc231d9">
+</div>
+<div id="outline-container-org1a77b95" class="outline-4">
+<h4 id="org1a77b95"><span class="todo TODO">TODO</span> Collect and organize copies of all vendor invoices from July 2019 to present</h4>
+</div>
+<div id="outline-container-org4800aa9" class="outline-4">
+<h4 id="org4800aa9"><span class="todo TODO">TODO</span> Collect and organize copies of all library purchase orders from July 2019 to present</h4>
+</div>
+</div>
+
+<div id="outline-container-org15e9815" class="outline-3">
+<h3 id="org15e9815">Aquisitions - Usage Reports</h3>
+<div class="outline-text-3" id="text-org15e9815">
+</div>
+<div id="outline-container-org935169d" class="outline-4">
+<h4 id="org935169d"><span class="todo TODO">TODO</span> Create reference sheet identifying which system each vendor uses to report usage (Counter4/Counter5/Vendor-Specific, etc.)</h4>
+</div>
+<div id="outline-container-orgbc4a44e" class="outline-4">
+<h4 id="orgbc4a44e"><span class="todo TODO">TODO</span> Obtain and store all usage reports</h4>
+<div class="outline-text-4" id="text-orgbc4a44e">
+<ul class="org-ul">
+<li>Full reports for all vendors from July 2019 to present</li>
+<li>As many historical reports as are still available, as far back as possible</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgba6cb0a" class="outline-3">
+<h3 id="orgba6cb0a">Digital/E-Resources</h3>
+<div class="outline-text-3" id="text-orgba6cb0a">
+</div>
+<div id="outline-container-org9687025" class="outline-4">
+<h4 id="org9687025"><span class="todo TODO">TODO</span> Create reference workbook for each subscription package, including:</h4>
+<div class="outline-text-4" id="text-org9687025">
+<ul class="org-ul">
+<li>Package Name</li>
+<li>Vendor Name</li>
+<li>Package URL</li>
+<li>Title List and Coverage(s)</li>
+<li>Subscription Dates (Start/End)</li>
+<li>Subscription Price</li>
+<li>Patron Authentication (EZProxy, Vendor-Specific, etc.)</li>
+<li>Administrative URL</li>
+<li>Administrative Authentication Information (IP, Username, None, etc.)</li>
+<li>Copyright and Usage Considerations, if any</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbb117e2" class="outline-4">
+<h4 id="orgbb117e2"><span class="todo TODO">TODO</span> Create reference workbook for each Open Access package, including:</h4>
+<div class="outline-text-4" id="text-orgbb117e2">
+<ul class="org-ul">
+<li>Package Name</li>
+<li>Vendor Name</li>
+<li>Package URL</li>
+<li>Title List and Coverage(s)</li>
+<li>Patron Authentication (EZProxy, Vendor-Specific, etc.)</li>
+<li>Administrative URL (if any)</li>
+<li>Administrative Authentication Information (if any)</li>
+<li>Copyright and Usage Considerations</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9c18b72" class="outline-4">
+<h4 id="org9c18b72"><span class="todo TODO">TODO</span> Create reference sheet identifying "High Priority" resources, such as:</h4>
+<div class="outline-text-4" id="text-org9c18b72">
+<ul class="org-ul">
+<li>Readings from library resources referenced directly in courses (ebook chapters, articles, etc.)</li>
+<li>Core/Most Important Databases</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge11186b" class="outline-4">
+<h4 id="orge11186b"><span class="todo TODO">TODO</span> Create reference sheet identiying "Low Priority" resources, such as:</h4>
+<div class="outline-text-4" id="text-orge11186b">
+<ul class="org-ul">
+<li>Subscription packages that are expiring or planned for discontinuation</li>
+<li>Reference-only collections/packages</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org44fb329" class="outline-4">
+<h4 id="org44fb329"><span class="todo TODO">TODO</span> Weeding Project for Ebsco Perpetual Titles</h4>
+<div class="outline-text-4" id="text-org44fb329">
+<ul class="org-ul">
+<li>Identify all titles with usage in the prior year</li>
+<li>Apply weeding criteria to titles with usage</li>
+<li>Generate list of titles to bring forward into Alma</li>
+<li>Generate list of titles to exclude from Alma (weeded titles, including zero-usage titles)</li>
+<li>Generate list of titles with newer editions to be purchase</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88804f4" class="outline-3">
+<h3 id="org88804f4">Fulfillment</h3>
+<div class="outline-text-3" id="text-org88804f4">
+</div>
+<div id="outline-container-org06ff6bf" class="outline-4">
+<h4 id="org06ff6bf"><span class="done DONE">DONE</span> None, as we do not have phyiscal collections</h4>
+</div>
+</div>
+
+<div id="outline-container-org24015cc" class="outline-3">
+<h3 id="org24015cc">Interlibrary Loan</h3>
+<div class="outline-text-3" id="text-org24015cc">
+</div>
+<div id="outline-container-org12b7360" class="outline-4">
+<h4 id="org12b7360"><span class="todo TODO">TODO</span> Task list and extent of integration not currently clear, follow up after 9/30 meeting</h4>
+</div>
+</div>
+
+<div id="outline-container-orga7727b6" class="outline-3">
+<h3 id="orga7727b6">Discovery</h3>
+<div class="outline-text-3" id="text-orga7727b6">
+</div>
+<div id="outline-container-org15ca89b" class="outline-4">
+<h4 id="org15ca89b"><span class="todo TODO">TODO</span> Review Metadata Definitions (after 9/30 meeting)</h4>
+</div>
+
+<div id="outline-container-org5c8ba37" class="outline-4">
+<h4 id="org5c8ba37"><span class="todo TODO">TODO</span> Determine "tuning" parameters for discovery interface</h4>
+</div>
+
+<div id="outline-container-org640e86b" class="outline-4">
+<h4 id="org640e86b"><span class="todo TODO">TODO</span> Conform discovery interface to Chamberlain Branding</h4>
+</div>
+
+<div id="outline-container-org7bdbb7a" class="outline-4">
+<h4 id="org7bdbb7a"><span class="todo TODO">TODO</span> Develop UX/UI huidelines for discovery interface and apply</h4>
+</div>
+
+<div id="outline-container-org2ddc740" class="outline-4">
+<h4 id="org2ddc740"><span class="todo TODO">TODO</span> Develop accessibility guidelines for discovery interface and apply</h4>
+</div>
+
+<div id="outline-container-orgb2a5727" class="outline-4">
+<h4 id="orgb2a5727"><span class="todo TODO">TODO</span> Identify packages/resources that do not work effectively in the discovery interface</h4>
+</div>
+
+<div id="outline-container-org4188372" class="outline-4">
+<h4 id="org4188372"><span class="todo TODO">TODO</span> Develop plan to mitigate discovery gaps</h4>
+</div>
+</div>
+</div>
+<div id="outline-container-org5a8c626" class="outline-2">
+<h2 id="org5a8c626">Chamberlain IT Tasks</h2>
+<div class="outline-text-2" id="text-org5a8c626">
+</div>
+<div id="outline-container-orge94a2a8" class="outline-3">
+<h3 id="orge94a2a8">Basic Infrastructure</h3>
+<div class="outline-text-3" id="text-orge94a2a8">
+</div>
+<div id="outline-container-org190992b" class="outline-4">
+<h4 id="org190992b"><span class="todo TODO">TODO</span> Create SFTP Server for file transfers</h4>
+</div>
+</div>
+
+<div id="outline-container-orga126d35" class="outline-3">
+<h3 id="orga126d35">User Management Integrations (Mandatory)</h3>
+<div class="outline-text-3" id="text-orga126d35">
+</div>
+<div id="outline-container-orgf1822b7" class="outline-4">
+<h4 id="orgf1822b7"><span class="todo TODO">TODO</span> Implement Connection with Student Information System</h4>
+</div>
+
+<div id="outline-container-org6220ea8" class="outline-4">
+<h4 id="org6220ea8"><span class="todo TODO">TODO</span> Implement connection with Authentication/SSO System (Current: Okta; Future: Azure)</h4>
+</div>
+</div>
+<div id="outline-container-orgea22003" class="outline-3">
+<h3 id="orgea22003">Acquisitions Integrations (If Possible)</h3>
+<div class="outline-text-3" id="text-orgea22003">
+</div>
+<div id="outline-container-org2f49c7d" class="outline-4">
+<h4 id="org2f49c7d"><span class="todo TODO">TODO</span> Implement payment workflow to automate invoice movement and payment confirmations between Alma and AP Advantage</h4>
+</div>
+
+<div id="outline-container-org8ce10d3" class="outline-4">
+<h4 id="org8ce10d3"><span class="todo TODO">TODO</span> Implement Purchase Order workflow between Alma and Lawson</h4>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: etb</p>
+<p class="date">Created: 2020-08-31 Mon 11:34</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
