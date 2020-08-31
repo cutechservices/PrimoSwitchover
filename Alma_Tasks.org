@@ -13,6 +13,37 @@
 #+HTML_HEAD: <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/hideshow.js"></script>
 #+HTML_HEAD: <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
 
+* Timeline
+
+** Chamberlain/AdTalem Project Request Due
+- Prior to 2020-09-30
+** Onboarding Kickoff
+- 2020-09-30
+** Communication Plan Due
+- 2020-10-05
+** ProQuest Implementation Form Due
+- 2020-10-07
+** Library Team Training Start
+- 2020-11-01 [Specific Date(s) TBD]
+** Communication Plan Kickoff
+- 2021-12-28
+** Implementation Kickoff
+- 2021-01-04 [Specific Date(s) TBD]
+** Test Load Start
+- 2021-01-26
+** Cutover Start
+- 2021-04-18
+** Implementation Complete
+- 2021-05-04
+** Public Alpha Test
+- 2021-05-05 through 2021-05-31
+** Public Beta Test
+- 2021-06-01 through 2021-06-30
+** Training Workshops
+- 2021-06-01 through 2021-06-30
+** Go Live Date
+- 2021-07-01
+
 * Library Team Tasks
 
 ** Acquisitions - Vendor Information
@@ -121,6 +152,7 @@
 *** TODO Implement Connection with Student Information System
 
 *** TODO Implement connection with Authentication/SSO System (Current: Okta; Future: Azure)
+
 ** Acquisitions Integrations (If Possible)
 
 *** TODO Implement payment workflow to automate invoice movement and payment confirmations between Alma and AP Advantage
