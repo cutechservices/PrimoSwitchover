@@ -1,4 +1,4 @@
-#+TITLE: Primo Implementation - Main Task List
+#+TITLE: Alma/Primo Implementation - Main Task List
 #+AUTHOR: etb
 #+OPTIONS: num:nil
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/bigblow/css/htmlize.css"/>
@@ -29,6 +29,7 @@
 - Communication Plan Kickoff
 ** 2021-01-04 [Specific Date(s) TBD]
 - Implementation Kickoff
+- Website Content Lock
 ** 2021-01-26
 - Test Load Start
 ** 2021-04-18
